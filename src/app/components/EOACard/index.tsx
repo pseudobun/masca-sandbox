@@ -66,11 +66,11 @@ export default function EOACard() {
   }, [isConnected, address]);
 
   const handleEnableMasca = async () => {
-    if (accountStatus !== 'connected') {
+    if (!isConnected) {
       return;
     }
 
-    const res = await enableMasca(address);
+    const res = await enableMasca(address as `0x${string}`);
     if (!res.success) {
       console.error(res.error);
       return;
@@ -79,27 +79,27 @@ export default function EOACard() {
     setMascaApi(mascaApi);
     const did = await mascaApi.getDID();
     if (isError(did)) {
-      console.log("Couldn't get DID");
+      console.error("Couldn't get DID");
       throw new Error(did.error);
     }
     const availableMethods = await mascaApi.getAvailableMethods();
     if (isError(availableMethods)) {
-      console.log("Couldn't get available methods");
+      console.error("Couldn't get available methods");
       throw new Error(availableMethods.error);
     }
     const method = await mascaApi.getSelectedMethod();
     if (isError(method)) {
-      console.log("Couldn't get selected method");
+      console.error("Couldn't get selected method");
       throw new Error(method.error);
     }
     const accountSettings = await mascaApi.getAccountSettings();
     if (isError(accountSettings)) {
-      console.log("Couldn't get account settings");
+      console.error("Couldn't get account settings");
       throw new Error(accountSettings.error);
     }
     const snapSettings = await mascaApi.getSnapSettings();
     if (isError(snapSettings)) {
-      console.log("Couldn't get snap settings");
+      console.error("Couldn't get snap settings");
       throw new Error(snapSettings.error);
     }
     setCurrentDid(did.data);
