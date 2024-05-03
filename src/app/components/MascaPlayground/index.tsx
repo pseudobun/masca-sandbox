@@ -16,8 +16,8 @@ export default function MascaPlayground() {
         <AccordionItem key="2" title="Create VP">
           TODO: create VP
         </AccordionItem>
-        <AccordionItem key="3" title="TODO">
-          TODO: ...
+        <AccordionItem key="3" title="Misc">
+          TODO: Misc methods
         </AccordionItem>
       </Accordion>
     </div>
