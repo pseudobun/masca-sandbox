@@ -1,11 +1,14 @@
 import { useMascaStore } from '@/app/stores/masca';
+import { toast } from 'sonner';
 import {
+  availableCredentialStores,
   isError,
   type AvailableCredentialStores,
   type SupportedProofFormats,
 } from '@blockchain-lab-um/masca-connector';
-import { Button, Divider, Textarea } from '@nextui-org/react';
+import { Button, Checkbox, Divider, Textarea } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
+import { capitalizeWord } from '@/lib/utils';
 
 const proofFormats: Record<string, SupportedProofFormats> = {
   JWT: 'jwt',
@@ -15,25 +18,30 @@ const proofFormats: Record<string, SupportedProofFormats> = {
 
 export default function CreateCredential() {
   const [credentialPayload, setCredentialPayload] = useState('');
+  const [isSave, setIsSave] = useState(false);
+  const [saveToSnap, setSaveToSnap] = useState(false);
+  const [saveToCeramic, setSaveToCeramic] = useState(false);
   const [saving, setSaving] = useState(false);
   const { did, mascaApi } = useMascaStore((state) => ({
     did: state.currDID,
     mascaApi: state.mascaApi,
+    availableCredentialStores: state.availableCredentialStores,
   }));
 
   const handleSaveVc = async () => {
     if (!mascaApi) return;
     setSaving(true);
     const vcObj = JSON.parse(credentialPayload);
+    if (isSave) {
+      console.info('Saving to snap: ', saveToSnap);
+      console.info('Saving to ceramic: ', saveToCeramic);
+    }
     const res = await mascaApi.createCredential({
       minimalUnsignedCredential: vcObj,
       //   proofFormat: proofFormats[format],
       options: {
-        save: true,
-        // save
-        // store: selectedItems.map((store) =>
-        //   store.toLowerCase()
-        // ) as AvailableCredentialStores[],
+        save: isSave,
+        store: saveToSnap ? 'snap' : saveToCeramic ? 'ceramic' : undefined,
       },
     });
     if (isError(res)) {
@@ -69,10 +77,44 @@ export default function CreateCredential() {
   return (
     <div className="flex flex-col gap-y-2">
       <Textarea
+        className="scrollbar-hide"
         value={credentialPayload}
         onChange={(e) => setCredentialPayload(e.target.value)}
       />
-      <Button color="primary" isLoading={saving} onClick={() => handleSaveVc()}>
+      <Checkbox isSelected={isSave} onValueChange={setIsSave}>
+        Save
+      </Checkbox>
+      {isSave && (
+        <div className="flex flex-col gap-y-2">
+          {availableCredentialStores.map((store) => (
+            <Checkbox
+              key={store}
+              isSelected={store === 'snap' ? saveToSnap : saveToCeramic}
+              onValueChange={
+                store === 'snap' ? setSaveToSnap : setSaveToCeramic
+              }
+            >
+              {capitalizeWord(store)}
+            </Checkbox>
+          ))}
+        </div>
+      )}
+      <Button
+        className="w-fit"
+        color="primary"
+        isLoading={saving}
+        onClick={() =>
+          toast.promise(handleSaveVc(), {
+            loading: isSave
+              ? 'Creating and saving credential'
+              : 'Creating credential',
+            success: isSave
+              ? 'Credential saved'
+              : 'Credential created, check console logs',
+            error: 'Error creating credential',
+          })
+        }
+      >
         Create
       </Button>
     </div>

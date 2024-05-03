@@ -10,18 +10,14 @@ import {
   Chip,
   Divider,
 } from '@nextui-org/react';
-import { useEffect } from 'react';
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useChainId,
-  useSwitchChain,
-} from 'wagmi';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 
 export default function EOACard() {
   const { disconnect } = useDisconnect();
   const { address, isConnected, status: accountStatus, chainId } = useAccount();
+  const [isEnabling, setIsEnabling] = useState(false);
   const { switchChainAsync } = useSwitchChain();
   const { status, error } = useConnect();
   const {
@@ -55,14 +51,24 @@ export default function EOACard() {
 
   useEffect(() => {
     if (!address) return;
-    handleEnableMasca().catch(async (err) => {
-      if (err.message.toLowerCase().includes('unsupported network')) {
-        await switchChainAsync({ chainId: 1 });
-        await handleEnableMasca();
-        return;
+    setIsEnabling(true);
+    toast.promise(
+      handleEnableMasca()
+        .catch(async (err) => {
+          if (err.message.toLowerCase().includes('unsupported network')) {
+            await switchChainAsync({ chainId: 1 });
+            await handleEnableMasca();
+            return;
+          }
+          console.error(err);
+        })
+        .finally(() => setIsEnabling(false)),
+      {
+        loading: 'Enabling Masca',
+        success: 'Masca enabled',
+        error: 'Failed to enable Masca',
       }
-      console.error(err);
-    });
+    );
   }, [isConnected, address]);
 
   const handleEnableMasca = async () => {
@@ -117,12 +123,16 @@ export default function EOACard() {
         <Divider />
         <CardBody className="flex flex-col gap-y-2">
           <div className="flex flex-col gap-y-4">
-            <Chip color={accountStatus === 'connected' ? 'success' : 'danger'}>
-              {accountStatus}
-            </Chip>
+            <div className="flex gap-x-2">
+              <Chip
+                color={accountStatus === 'connected' ? 'success' : 'danger'}
+              >
+                {accountStatus}
+              </Chip>
+              <Chip color={statusColor[status] || 'default'}>{status}</Chip>
+            </div>
             <p>Address: {address}</p>
             <p>Chain ID: {chainId}</p>
-            <Chip color={statusColor[status] || 'default'}>{status}</Chip>
             <div>{error?.message}</div>
           </div>
         </CardBody>
@@ -136,7 +146,21 @@ export default function EOACard() {
             )}
           </div>
           <div hidden={mascaApi !== null}>
-            <Button color="primary" onClick={() => handleEnableMasca()}>
+            <Button
+              color="primary"
+              isLoading={isEnabling}
+              onClick={() => {
+                setIsEnabling(true);
+                toast.promise(
+                  handleEnableMasca().finally(() => setIsEnabling(false)),
+                  {
+                    loading: 'Enabling Masca',
+                    success: 'Masca enabled',
+                    error: 'Failed to enable Masca',
+                  }
+                );
+              }}
+            >
               Enable Masca
             </Button>
           </div>
