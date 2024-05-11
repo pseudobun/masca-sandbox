@@ -1,9 +1,9 @@
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import { formatDid } from '@/app/utils/format';
 import { Tooltip } from '@nextui-org/react';
 
 export default function MascaInfo() {
-  const { state } = useMascaStore((state) => ({
+  const { state } = useMascaStore((state: MascaStore) => ({
     state: state,
   }));
   return (

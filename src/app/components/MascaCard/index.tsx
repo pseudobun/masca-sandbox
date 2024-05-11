@@ -1,6 +1,6 @@
 'use client';
 
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import {
   Accordion,
   AccordionItem,
@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 import MascaInfo from './MascaInfo';
 
 export default function MascaCard() {
-  const { currentDid } = useMascaStore((state) => ({
+  const { currentDid } = useMascaStore((state: MascaStore) => ({
     currentDid: state.currDID,
   }));
   const { status } = useAccount();

@@ -1,5 +1,5 @@
 'use client';
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import { enableMasca, isError } from '@blockchain-lab-um/masca-connector';
 import {
   Button,
@@ -35,7 +35,7 @@ export default function EOACard() {
     setAvailableMethods,
     setAvailableCredentialStores,
     setPopups,
-  } = useMascaStore((state) => ({
+  } = useMascaStore((state: MascaStore) => ({
     mascaApi: state.mascaApi,
     setMascaApi: state.setMascaApi,
     setCurrentDid: state.setCurrDID,

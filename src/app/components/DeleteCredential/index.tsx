@@ -1,4 +1,4 @@
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import { Button, Checkbox, Input } from '@nextui-org/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -8,7 +8,7 @@ export default function DeleteCredential() {
   const [deleting, setDeleting] = useState(false);
   const [fromSnap, setFromSnap] = useState(true);
   const [fromCeramic, setFromCeramic] = useState(true);
-  const { mascaApi } = useMascaStore((state) => ({
+  const { mascaApi } = useMascaStore((state: MascaStore) => ({
     mascaApi: state.mascaApi,
   }));
   const handleDeleteCredential = async () => {

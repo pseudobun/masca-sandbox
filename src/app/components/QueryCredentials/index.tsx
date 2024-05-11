@@ -1,4 +1,4 @@
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import type { QueryCredentialsRequestResult } from '@blockchain-lab-um/masca-connector';
 import { Button, Textarea } from '@nextui-org/react';
 import { useState } from 'react';
@@ -10,7 +10,7 @@ export default function QueryCredentials() {
   >([]);
   const [credential, setCredential] = useState('');
   const [querying, setQuerying] = useState(false);
-  const { mascaApi } = useMascaStore((state) => ({
+  const { mascaApi } = useMascaStore((state: MascaStore) => ({
     mascaApi: state.mascaApi,
   }));
 

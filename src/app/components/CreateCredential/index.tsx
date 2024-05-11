@@ -1,4 +1,4 @@
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import { toast } from 'sonner';
 import {
   availableCredentialStores,
@@ -21,7 +21,7 @@ export default function CreateCredential() {
   const [saveToSnap, setSaveToSnap] = useState(false);
   const [saveToCeramic, setSaveToCeramic] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { did, mascaApi } = useMascaStore((state) => ({
+  const { did, mascaApi } = useMascaStore((state: MascaStore) => ({
     did: state.currDID,
     mascaApi: state.mascaApi,
     availableCredentialStores: state.availableCredentialStores,

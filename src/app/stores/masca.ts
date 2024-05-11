@@ -6,7 +6,7 @@ import type {
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-interface MascaStore {
+export interface MascaStore {
   mascaApi: MascaApi | null;
   availableMethods: string[];
   currDIDMethod: string | undefined;

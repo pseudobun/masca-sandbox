@@ -1,12 +1,12 @@
 'use client';
-import { useMascaStore } from '@/app/stores/masca';
+import { type MascaStore, useMascaStore } from '@/app/stores/masca';
 import { Accordion, AccordionItem } from '@nextui-org/react';
 import CreateCredential from '../CreateCredential';
 import QueryCredentials from '../QueryCredentials';
 import DeleteCredential from '../DeleteCredential';
 
 export default function MascaPlayground() {
-  const { mascaApi } = useMascaStore((state) => ({
+  const { mascaApi } = useMascaStore((state: MascaStore) => ({
     mascaApi: state.mascaApi,
   }));
   return (
