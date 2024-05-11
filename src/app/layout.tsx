@@ -16,7 +16,7 @@ export default function RootLayout(props: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="p-12 h-screen w-screen dark text-foreground bg-background">
+        <main className="p-12 h-full min-h-screen w-screen dark text-foreground bg-background">
           <Providers>{props.children}</Providers>
         </main>
       </body>

@@ -3,10 +3,9 @@ import { toast } from 'sonner';
 import {
   availableCredentialStores,
   isError,
-  type AvailableCredentialStores,
   type SupportedProofFormats,
 } from '@blockchain-lab-um/masca-connector';
-import { Button, Checkbox, Divider, Textarea } from '@nextui-org/react';
+import { Button, Checkbox, Textarea } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { capitalizeWord } from '@/lib/utils';
 
@@ -45,9 +44,10 @@ export default function CreateCredential() {
       },
     });
     if (isError(res)) {
-      console.error(res);
+      toast.error(res.error);
       setSaving(false);
     }
+    toast.success('Credential created');
     console.log('Credential created', res);
     setSaving(false);
   };
