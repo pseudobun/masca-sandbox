@@ -1,14 +1,7 @@
 'use client';
 
 import { type MascaStore, useMascaStore } from '@/app/stores/masca';
-import {
-  Accordion,
-  AccordionItem,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-} from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
 import { useAccount } from 'wagmi';
 import MascaInfo from './MascaInfo';
 
