@@ -12,13 +12,20 @@ import {
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsName,
+  useSwitchChain,
+} from 'wagmi';
 
 export default function EOACard() {
   const { disconnect } = useDisconnect();
   const { address, isConnected, status: accountStatus, chainId } = useAccount();
   const [isEnabling, setIsEnabling] = useState(false);
   const { switchChainAsync } = useSwitchChain();
+  const { data } = useEnsName({ address: address as `0x${string}` });
   const { status, error } = useConnect();
   const {
     setMascaApi,
@@ -131,6 +138,7 @@ export default function EOACard() {
               </Chip>
               <Chip color={statusColor[status] || 'default'}>{status}</Chip>
             </div>
+            {data && <Chip color="primary">{data}</Chip>}
             <p>Address: {address}</p>
             <p>Chain ID: {chainId}</p>
             <div>{error?.message}</div>
